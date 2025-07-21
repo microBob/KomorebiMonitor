@@ -4,7 +4,7 @@
 //
 //    using KomorebiMonitor.models;
 //
-//    var notificationMessage = NotificationMessage.FromJson(jsonString);
+//    var socketMessage = SocketMessage.FromJson(jsonString);
 #nullable enable
 #pragma warning disable CS8618
 #pragma warning disable CS8601
@@ -19,7 +19,7 @@ namespace KomorebiMonitor.models
     using System.Text.Json.Serialization;
     using System.Globalization;
 
-    public partial class NotificationMessage
+    public partial class SocketMessage
     {
         [JsonPropertyName("event")]
         public NotificationEvent Event { get; set; }
@@ -226,6 +226,84 @@ namespace KomorebiMonitor.models
         public long? Top { get; set; }
     }
 
+    /// <summary>
+    /// Colours of the custom Base16 theme palette
+    /// </summary>
+    public partial class Base16ColourPalette
+    {
+        [JsonPropertyName("base_00")]
+        public Colour Base00 { get; set; }
+
+        [JsonPropertyName("base_01")]
+        public Colour Base01 { get; set; }
+
+        [JsonPropertyName("base_02")]
+        public Colour Base02 { get; set; }
+
+        [JsonPropertyName("base_03")]
+        public Colour Base03 { get; set; }
+
+        [JsonPropertyName("base_04")]
+        public Colour Base04 { get; set; }
+
+        [JsonPropertyName("base_05")]
+        public Colour Base05 { get; set; }
+
+        [JsonPropertyName("base_06")]
+        public Colour Base06 { get; set; }
+
+        [JsonPropertyName("base_07")]
+        public Colour Base07 { get; set; }
+
+        [JsonPropertyName("base_08")]
+        public Colour Base08 { get; set; }
+
+        [JsonPropertyName("base_09")]
+        public Colour Base09 { get; set; }
+
+        [JsonPropertyName("base_0a")]
+        public Colour Base0A { get; set; }
+
+        [JsonPropertyName("base_0b")]
+        public Colour Base0B { get; set; }
+
+        [JsonPropertyName("base_0c")]
+        public Colour Base0C { get; set; }
+
+        [JsonPropertyName("base_0d")]
+        public Colour Base0D { get; set; }
+
+        [JsonPropertyName("base_0e")]
+        public Colour Base0E { get; set; }
+
+        [JsonPropertyName("base_0f")]
+        public Colour Base0F { get; set; }
+    }
+
+    /// <summary>
+    /// Colour represented as RGB
+    /// </summary>
+    public partial class Rgb
+    {
+        /// <summary>
+        /// Blue
+        /// </summary>
+        [JsonPropertyName("b")]
+        public long B { get; set; }
+
+        /// <summary>
+        /// Green
+        /// </summary>
+        [JsonPropertyName("g")]
+        public long G { get; set; }
+
+        /// <summary>
+        /// Red
+        /// </summary>
+        [JsonPropertyName("r")]
+        public long R { get; set; }
+    }
+
     public partial class State
     {
         [JsonPropertyName("cross_monitor_move_behaviour")]
@@ -326,6 +404,33 @@ namespace KomorebiMonitor.models
 
         [JsonPropertyName("workspaces")]
         public RingForWorkspace Workspaces { get; set; }
+    }
+
+    public partial class Rect
+    {
+        /// <summary>
+        /// The bottom point in a Win32 Rect
+        /// </summary>
+        [JsonPropertyName("bottom")]
+        public long Bottom { get; set; }
+
+        /// <summary>
+        /// The left point in a Win32 Rect
+        /// </summary>
+        [JsonPropertyName("left")]
+        public long Left { get; set; }
+
+        /// <summary>
+        /// The right point in a Win32 Rect
+        /// </summary>
+        [JsonPropertyName("right")]
+        public long Right { get; set; }
+
+        /// <summary>
+        /// The top point in a Win32 Rect
+        /// </summary>
+        [JsonPropertyName("top")]
+        public long Top { get; set; }
     }
 
     public partial class Wallpaper
@@ -696,7 +801,19 @@ namespace KomorebiMonitor.models
 
     public enum VirtualDesktopNotification { EnteredAssociatedVirtualDesktop, LeftAssociatedVirtualDesktop };
 
+    public enum Value { Base, Base00, Base01, Base02, Base03, Base04, Base05, Base06, Base07, Base08, Base09, Base0A, Base0B, Base0C, Base0D, Base0E, Base0F, Blue, Crust, Flamingo, Green, Lavender, Mantle, Maroon, Mauve, Overlay0, Overlay1, Overlay2, Peach, Pink, Red, Rosewater, Sapphire, Sky, Subtext0, Subtext1, Surface0, Surface1, Surface2, Teal, Text, Yellow };
 
+    /// <summary>
+    /// Name of the Catppuccin theme (theme previews: https://github.com/catppuccin/catppuccin)
+    ///
+    /// Name of the Base16 theme (theme previews:
+    /// https://tinted-theming.github.io/tinted-gallery/)
+    /// </summary>
+    public enum Catppuccin { Apathy, Apprentice, Ashes, AtelierCave, AtelierCaveLight, AtelierDune, AtelierDuneLight, AtelierEstuary, AtelierEstuaryLight, AtelierForest, AtelierForestLight, AtelierHeath, AtelierHeathLight, AtelierLakeside, AtelierLakesideLight, AtelierPlateau, AtelierPlateauLight, AtelierSavanna, AtelierSavannaLight, AtelierSeaside, AtelierSeasideLight, AtelierSulphurpool, AtelierSulphurpoolLight, Atlas, AyuDark, AyuLight, AyuMirage, Aztec, Bespin, BlackMetal, BlackMetalBathory, BlackMetalBurzum, BlackMetalDarkFuneral, BlackMetalGorgoroth, BlackMetalImmortal, BlackMetalKhold, BlackMetalMarduk, BlackMetalMayhem, BlackMetalNile, BlackMetalVenom, Blueforest, Blueish, Brewer, Bright, Brogrammer, Brushtrees, BrushtreesDark, Caroline, CatppuccinFrappe, CatppuccinLatte, CatppuccinMacchiato, CatppuccinMocha, Chalk, Circus, ClassicDark, ClassicLight, Codeschool, Colors, Cupcake, Cupertino, DaOneBlack, DaOneGray, DaOneOcean, DaOnePaper, DaOneSea, DaOneWhite, Danqing, DanqingLight, Darcula, Darkmoss, Darktooth, Darkviolet, Decaf, DefaultDark, DefaultLight, Dirtysea, Dracula, EdgeDark, EdgeLight, Eighties, Embers, EmbersLight, Emil, EquilibriumDark, EquilibriumGrayDark, EquilibriumGrayLight, EquilibriumLight, Eris, Espresso, Eva, EvaDim, EvenokDark, Everforest, EverforestDarkHard, Flat, Framer, Frappe, FruitSoda, Gigavolt, Github, GoogleDark, GoogleLight, Gotham, GrayscaleDark, GrayscaleLight, Greenscreen, Gruber, GruvboxDarkHard, GruvboxDarkMedium, GruvboxDarkPale, GruvboxDarkSoft, GruvboxLightHard, GruvboxLightMedium, GruvboxLightSoft, GruvboxMaterialDarkHard, GruvboxMaterialDarkMedium, GruvboxMaterialDarkSoft, GruvboxMaterialLightHard, GruvboxMaterialLightMedium, GruvboxMaterialLightSoft, Hardcore, Harmonic16Dark, Harmonic16Light, Heetch, HeetchLight, Helios, Hopscotch, HorizonDark, HorizonLight, HorizonTerminalDark, HorizonTerminalLight, HumanoidDark, HumanoidLight, IaDark, IaLight, Icy, Irblack, Isotope, Jabuti, Kanagawa, Katy, Kimber, Latte, Lime, Macchiato, Macintosh, Marrakesh, Materia, Material, MaterialDarker, MaterialLighter, MaterialPalenight, MaterialVivid, MeasuredDark, MeasuredLight, MellowPurple, MexicoLight, Mocha, Monokai, Moonlight, Mountain, Nebula, Nord, NordLight, Nova, Ocean, Oceanicnext, OneLight, Onedark, OnedarkDark, OutrunDark, OxocarbonDark, OxocarbonLight, Pandora, PapercolorDark, PapercolorLight, Paraiso, Pasque, Phd, Pico, Pinky, Pop, Porple, PreciousDarkEleven, PreciousDarkFifteen, PreciousLightWarm, PreciousLightWhite, PrimerDark, PrimerDarkDimmed, PrimerLight, Purpledream, Qualia, Railscasts, Rebecca, RosePine, RosePineDawn, RosePineMoon, Saga, Sagelight, Sakura, Sandcastle, SelenizedBlack, SelenizedDark, SelenizedLight, SelenizedWhite, Seti, ShadesOfPurple, ShadesmearDark, ShadesmearLight, Shapeshifter, SilkDark, SilkLight, Snazzy, Solarflare, SolarflareLight, SolarizedDark, SolarizedLight, Spaceduck, Spacemacs, Sparky, StandardizedDark, StandardizedLight, Stella, StillAlive, Summercamp, SummerfruitDark, SummerfruitLight, SynthMidnightDark, SynthMidnightLight, Tango, Tarot, Tender, Terracotta, TerracottaDark, The3024, TokyoCityDark, TokyoCityLight, TokyoCityTerminalDark, TokyoCityTerminalLight, TokyoNightDark, TokyoNightLight, TokyoNightMoon, TokyoNightStorm, TokyoNightTerminalDark, TokyoNightTerminalLight, TokyoNightTerminalStorm, Tokyodark, TokyodarkTerminal, Tomorrow, TomorrowNight, TomorrowNightEighties, Tube, Twilight, UnikittyDark, UnikittyLight, UnikittyReversible, Uwunicorn, Vesper, Vice, Vulcan, Windows10, Windows10Light, Windows95, Windows95Light, WindowsHighcontrast, WindowsHighcontrastLight, WindowsNt, WindowsNtLight, Woodland, XcodeDusk, Zenbones, Zenburn };
+
+    public enum Palette { Base16, Catppuccin, Custom };
+
+    public enum TypeEnum { AddSubscriberPipe, AddSubscriberSocket, AddSubscriberSocketWithOptions, AdjustContainerPadding, AdjustWorkspacePadding, AltFocusHack, Animation, AnimationDuration, AnimationFps, AnimationStyle, ApplicationSpecificConfigurationSchema, Border, BorderColour, BorderImplementation, BorderOffset, BorderStyle, BorderWidth, ChangeLayout, ChangeLayoutCustom, ClearAllWorkspaceRules, ClearNamedWorkspaceLayoutRules, ClearNamedWorkspaceRules, ClearSessionFloatRules, ClearWorkspaceLayoutRules, ClearWorkspaceRules, Cloak, Close, CloseWorkspace, CompleteConfiguration, ContainerPadding, CrossMonitorMoveBehaviour, CycleFocusEmptyWorkspace, CycleFocusMonitor, CycleFocusWindow, CycleFocusWorkspace, CycleLayout, CycleMoveContainerToMonitor, CycleMoveContainerToWorkspace, CycleMoveWindow, CycleMoveWorkspaceToMonitor, CycleSendContainerToMonitor, CycleSendContainerToWorkspace, CycleStack, CycleStackIndex, DebugWindow, Destroy, DisplayConnectionChange, DisplayIndexPreference, EagerFocus, EnforceWorkspaceRules, EnsureNamedWorkspaces, EnsureWorkspaces, EnteringSuspendedState, FlipLayout, FocusChange, FocusFollowsMouse, FocusLastWorkspace, FocusMonitorAtCursor, FocusMonitorNumber, FocusMonitorWorkspaceNumber, FocusNamedWorkspace, FocusStackWindow, FocusWindow, FocusWorkspaceNumber, FocusWorkspaceNumbers, FocusedWorkspaceContainerPadding, FocusedWorkspacePadding, ForceFocus, GenerateStaticConfig, GlobalState, Hide, IdentifyBorderOverflowApplication, IdentifyLayeredApplication, IdentifyObjectNameChangeApplication, IdentifyTrayApplication, IgnoreRule, InitialNamedWorkspaceRule, InitialWorkspaceRule, InvisibleBorders, Load, LockMonitorWorkspaceContainer, Manage, ManageFocusedWindow, ManageRule, Minimize, MonitorIndexPreference, MonitorInformation, MonitorWorkAreaOffset, MouseCapture, MouseFollowsFocus, MoveContainerToLastWorkspace, MoveContainerToMonitorNumber, MoveContainerToMonitorWorkspaceNumber, MoveContainerToNamedWorkspace, MoveContainerToWorkspaceNumber, MoveResizeEnd, MoveResizeStart, MoveWindow, MoveWorkspaceToMonitorNumber, NamedWorkspaceContainerPadding, NamedWorkspaceLayout, NamedWorkspaceLayoutCustom, NamedWorkspaceLayoutCustomRule, NamedWorkspaceLayoutRule, NamedWorkspacePadding, NamedWorkspaceRule, NamedWorkspaceTiling, NewWorkspace, NotificationSchema, Promote, PromoteFocus, PromoteWindow, Query, QuickLoad, QuickSave, Raise, ReloadConfiguration, ReloadStaticConfiguration, RemoveSubscriberPipe, RemoveSubscriberSocket, RemoveTitleBar, ReplaceConfiguration, ResizeDelta, ResizeWindowAxis, ResizeWindowEdge, ResolutionScalingChanged, ResumingFromSuspendedState, Retile, RetileWithResizeDimensions, Save, SendContainerToLastWorkspace, SendContainerToMonitorNumber, SendContainerToMonitorWorkspaceNumber, SendContainerToNamedWorkspace, SendContainerToWorkspaceNumber, SessionFloatRule, SessionFloatRules, SessionLocked, SessionUnlocked, Show, SocketSchema, StackAll, StackWindow, StackbarBackgroundColour, StackbarFocusedTextColour, StackbarFontFamily, StackbarFontSize, StackbarHeight, StackbarLabel, StackbarMode, StackbarTabWidth, StackbarUnfocusedTextColour, State, StaticConfigSchema, Stop, StopIgnoreRestore, SwapWorkspacesToMonitorNumber, Theme, TitleUpdate, ToggleCrossMonitorMoveBehaviour, ToggleFloat, ToggleFloatOverride, ToggleFocusFollowsMouse, ToggleLock, ToggleMaximize, ToggleMonocle, ToggleMouseFollowsFocus, TogglePause, ToggleTiling, ToggleTitleBars, ToggleTransparency, ToggleWindowBasedWorkAreaOffset, ToggleWindowContainerBehaviour, ToggleWorkspaceFloatOverride, ToggleWorkspaceLayer, ToggleWorkspaceWindowContainerBehaviour, Transparency, TransparencyAlpha, Uncloak, UnlockMonitorWorkspaceContainer, Unmanage, UnmanageFocusedWindow, UnmanagedWindowOperationBehaviour, UnstackAll, UnstackWindow, VisibleWindows, WatchConfiguration, WindowHidingBehaviour, WorkAreaChanged, WorkAreaOffset, WorkspaceLayout, WorkspaceLayoutCustom, WorkspaceLayoutCustomRule, WorkspaceLayoutRule, WorkspaceName, WorkspacePadding, WorkspaceRule, WorkspaceTiling };
 
     /// <summary>
     /// Swap the window container with the window container at the edge of the adjacent monitor
@@ -753,6 +870,46 @@ namespace KomorebiMonitor.models
     /// </summary>
     public enum OperationBehaviour { NoOp, Op };
 
+    public partial struct AnimationStyle
+    {
+        public bool? Bool;
+        public long? Integer;
+        public string String;
+        public string[] StringArray;
+        public SubscribeOptionsClass SubscribeOptionsClass;
+
+        public static implicit operator AnimationStyle(bool Bool) => new AnimationStyle { Bool = Bool };
+        public static implicit operator AnimationStyle(long Integer) => new AnimationStyle { Integer = Integer };
+        public static implicit operator AnimationStyle(string String) => new AnimationStyle { String = String };
+        public static implicit operator AnimationStyle(string[] StringArray) => new AnimationStyle { StringArray = StringArray };
+        public static implicit operator AnimationStyle(SubscribeOptionsClass SubscribeOptionsClass) => new AnimationStyle { SubscribeOptionsClass = SubscribeOptionsClass };
+        public bool IsNull => StringArray == null && Bool == null && SubscribeOptionsClass == null && Integer == null && String == null;
+    }
+
+    public partial struct Colour
+    {
+        public Rgb Rgb;
+        public string String;
+
+        public static implicit operator Colour(Rgb Rgb) => new Colour { Rgb = Rgb };
+        public static implicit operator Colour(string String) => new Colour { String = String };
+    }
+
+    public partial struct Content
+    {
+        public AnimationStyle[] AnythingArray;
+        public bool? Bool;
+        public long? Integer;
+        public KomorebiThemeClass KomorebiThemeClass;
+        public string String;
+
+        public static implicit operator Content(AnimationStyle[] AnythingArray) => new Content { AnythingArray = AnythingArray };
+        public static implicit operator Content(bool Bool) => new Content { Bool = Bool };
+        public static implicit operator Content(long Integer) => new Content { Integer = Integer };
+        public static implicit operator Content(KomorebiThemeClass KomorebiThemeClass) => new Content { KomorebiThemeClass = KomorebiThemeClass };
+        public static implicit operator Content(string String) => new Content { String = String };
+        public bool IsNull => AnythingArray == null && Bool == null && KomorebiThemeClass == null && Integer == null && String == null;
+    }
 
     public partial struct NotificationEvent
     {
@@ -800,9 +957,14 @@ namespace KomorebiMonitor.models
         public static implicit operator MatchingRule(IdWithIdentifier[] IdWithIdentifierArray) => new MatchingRule { IdWithIdentifierArray = IdWithIdentifierArray };
     }
 
-    public partial class NotificationMessage
+    public partial class SocketMessage
     {
-        public static NotificationMessage FromJson(string json) => JsonSerializer.Deserialize<NotificationMessage>(json, KomorebiMonitor.models.Converter.Settings);
+        public static SocketMessage FromJson(string json) => JsonSerializer.Deserialize<SocketMessage>(json, KomorebiMonitor.models.Converter.Settings);
+    }
+
+    public static class Serialize
+    {
+        public static string ToJson(this SocketMessage self) => JsonSerializer.Serialize(self, KomorebiMonitor.models.Converter.Settings);
     }
 
     internal static class Converter
