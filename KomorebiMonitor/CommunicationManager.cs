@@ -32,7 +32,7 @@ public class CommunicationManager
         client.Connect(komorebiSocketAddress, komorebiSocketPort);
         Console.WriteLine("Connected to Komorebi socket server.");
         _networkStream = client.GetStream();
-        SubscribeKomorebiToNamedPipe();
+        RequestKomorebiSubscribeToNamedPipe();
     }
 
     private void ListenForKomorebiEvents()
@@ -61,7 +61,7 @@ public class CommunicationManager
         }
     }
 
-    private void SubscribeKomorebiToNamedPipe()
+    private void RequestKomorebiSubscribeToNamedPipe()
     {
         // Create message to subscribe to named pipe.
         var message = new SocketMessage
@@ -69,6 +69,7 @@ public class CommunicationManager
             Content = new Content { String = _komorebiNamedPipeName },
             Type = TypeEnum.AddSubscriberPipe,
         };
+        Console.WriteLine(message.ToJson());
         var data = Encoding.UTF8.GetBytes(message.ToJson());
 
         _networkStream.Write(data, 0, data.Length);
