@@ -11,6 +11,7 @@ public class CommunicationManager
 
     private readonly string _komorebiNamedPipeName;
 
+    private readonly NamedPipeServerStream _namedPipeServer;
     private readonly NetworkStream _networkStream;
 
     #endregion
@@ -24,6 +25,7 @@ public class CommunicationManager
         _komorebiNamedPipeName = komorebiNamedPipeName;
 
         // Start a background thread to listen for Komorebi events on the named pipe.
+        _namedPipeServer = new NamedPipeServerStream(_komorebiNamedPipeName, PipeDirection.In);
         var pipeThread = new Thread(ListenForKomorebiEvents) { IsBackground = true };
         pipeThread.Start();
 
@@ -33,20 +35,40 @@ public class CommunicationManager
         Console.WriteLine("Connected to Komorebi socket server.");
         _networkStream = client.GetStream();
         RequestKomorebiSubscribeToNamedPipe();
-    }
-
-    private void ListenForKomorebiEvents()
-    {
-        using var pipeServer = new NamedPipeServerStream(_komorebiNamedPipeName, PipeDirection.In);
-        Console.WriteLine("Waiting for Komorebi to connect to named pipe...");
-        pipeServer.WaitForConnection();
-        Console.WriteLine("Komorebi connected to named pipe.");
 
         while (true)
         {
             try
             {
-                using var streamReader = new StreamReader(pipeServer, Encoding.UTF8);
+                if (_networkStream.DataAvailable)
+                {
+                    var buffer = new byte[4096];
+                    int bytesRead = _networkStream.Read(buffer, 0, buffer.Length);
+                    if (bytesRead > 0)
+                    {
+                        string response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                        Console.WriteLine($"Received from Komorebi socket: {response}");
+                    }
+                }
+                Thread.Sleep(100); // avoid busy loop
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error reading from socket: {ex.Message}");
+            }
+        }
+    }
+
+    private void ListenForKomorebiEvents()
+    {
+        _namedPipeServer.WaitForConnection();
+        Console.WriteLine("Komorebi connected to named pipe.");
+        
+        using var streamReader = new StreamReader(_namedPipeServer, Encoding.UTF8);
+        while (true)
+        {
+            try
+            {
                 while (streamReader.ReadLine() is { } line)
                 {
                     Console.WriteLine(line);
@@ -78,6 +100,7 @@ public class CommunicationManager
 
     public void OnApplicationExit()
     {
+        _namedPipeServer.Dispose();
         _networkStream.Dispose();
     }
 }
