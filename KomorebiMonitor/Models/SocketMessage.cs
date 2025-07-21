@@ -4,7 +4,7 @@
 //
 //    using KomorebiMonitor.SocketModel;
 //
-//    var socketSchema = SocketSchema.FromJson(jsonString);
+//    var socketMessage = SocketMessage.FromJson(jsonString);
 #nullable enable
 #pragma warning disable CS8618
 #pragma warning disable CS8601
@@ -19,7 +19,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Globalization;
 
-public partial class SocketSchema
+public partial class SocketMessage
 {
     [JsonPropertyName("content")]
     public Content? Content { get; set; }
@@ -342,14 +342,14 @@ public partial struct Content
     public bool IsNull => AnythingArray == null && Bool == null && KomorebiTheme == null && Integer == null && String == null;
 }
 
-public partial class SocketSchema
+public partial class SocketMessage
 {
-    public static SocketSchema FromJson(string json) => JsonSerializer.Deserialize<SocketSchema>(json, KomorebiMonitor.SocketModel.Converter.Settings);
+    public static SocketMessage FromJson(string json) => JsonSerializer.Deserialize<SocketMessage>(json, KomorebiMonitor.SocketModel.Converter.Settings);
 }
 
 public static class Serialize
 {
-    public static string ToJson(this SocketSchema self) => JsonSerializer.Serialize(self, KomorebiMonitor.SocketModel.Converter.Settings);
+    public static string ToJson(this SocketMessage self) => JsonSerializer.Serialize(self, KomorebiMonitor.SocketModel.Converter.Settings);
 }
 
 internal static class Converter
