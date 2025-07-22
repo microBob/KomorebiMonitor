@@ -38,7 +38,6 @@ public class CommunicationManager
         client.Connect(komorebiSocketAddress, komorebiSocketPort);
         Console.WriteLine("Connected to Komorebi socket server.");
         _networkStream = client.GetStream();
-        Thread.Sleep(1000);
         RequestKomorebiSubscribeToNamedPipe();
 
         while (true)
@@ -53,22 +52,6 @@ public class CommunicationManager
                     {
                         var response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
                         Console.WriteLine(response);
-                        var asMessage = NotificationMessage.FromJson(response);
-                        if (
-                            asMessage.Event.WindowManagerEvent.Type
-                            == NotificationTypeEnum.FocusChange
-                        )
-                        {
-                            var monitor = asMessage.State.Monitors.Focused;
-                            var workspace = asMessage
-                                .State
-                                .Monitors
-                                .Elements[monitor]
-                                .Workspaces
-                                .Focused;
-
-                            Console.WriteLine($"{monitor}: {workspace}");
-                        }
                     }
                 }
                 Thread.Sleep(100); // avoid busy loop
@@ -92,8 +75,19 @@ public class CommunicationManager
             {
                 while (streamReader.ReadLine() is { } line)
                 {
-                    Console.WriteLine(line);
-                    Console.WriteLine();
+                    var asMessage = NotificationMessage.FromJson(line);
+                    if (asMessage.Event.WindowManagerEvent.Type
+                        is not (NotificationTypeEnum.FocusChange
+                        or NotificationTypeEnum.FocusWorkspaceNumber)) continue;
+                    var monitor = asMessage.State.Monitors.Focused;
+                    var workspace = asMessage
+                        .State
+                        .Monitors
+                        .Elements[monitor]
+                        .Workspaces
+                        .Focused;
+
+                    Console.WriteLine($"{monitor}: {workspace}");
                 }
             }
             catch (Exception e)
