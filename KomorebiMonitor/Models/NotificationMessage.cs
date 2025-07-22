@@ -19,7 +19,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Globalization;
 
-public partial class NotificationSchema
+public partial class NotificationMessage
 {
     [JsonPropertyName("event")]
     public NotificationEvent Event { get; set; }
@@ -957,14 +957,14 @@ public partial struct MatchingRule
     public static implicit operator MatchingRule(IdWithIdentifier[] IdWithIdentifierArray) => new MatchingRule { IdWithIdentifierArray = IdWithIdentifierArray };
 }
 
-public partial class NotificationSchema
+public partial class NotificationMessage
 {
-    public static NotificationSchema FromJson(string json) => JsonSerializer.Deserialize<NotificationSchema>(json, KomorebiMonitor.NotificationModel.Converter.Settings);
+    public static NotificationMessage FromJson(string json) => JsonSerializer.Deserialize<NotificationMessage>(json, KomorebiMonitor.NotificationModel.Converter.Settings);
 }
 
 public static class Serialize
 {
-    public static string ToJson(this NotificationSchema self) => JsonSerializer.Serialize(self, KomorebiMonitor.NotificationModel.Converter.Settings);
+    public static string ToJson(this NotificationMessage self) => JsonSerializer.Serialize(self, KomorebiMonitor.NotificationModel.Converter.Settings);
 }
 
 internal static class Converter

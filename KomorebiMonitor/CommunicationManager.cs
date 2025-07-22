@@ -1,7 +1,11 @@
 ﻿using System.IO.Pipes;
 using System.Net.Sockets;
 using System.Text;
+using KomorebiMonitor.NotificationModel;
 using KomorebiMonitor.SocketModel;
+using NotificationTypeEnum = KomorebiMonitor.NotificationModel.TypeEnum;
+using SocketContent = KomorebiMonitor.SocketModel.Content;
+using SocketTypeEnum = KomorebiMonitor.SocketModel.TypeEnum;
 
 namespace KomorebiMonitor;
 
@@ -34,6 +38,7 @@ public class CommunicationManager
         client.Connect(komorebiSocketAddress, komorebiSocketPort);
         Console.WriteLine("Connected to Komorebi socket server.");
         _networkStream = client.GetStream();
+        Thread.Sleep(1000);
         RequestKomorebiSubscribeToNamedPipe();
 
         while (true)
@@ -43,11 +48,27 @@ public class CommunicationManager
                 if (_networkStream.DataAvailable)
                 {
                     var buffer = new byte[4096];
-                    int bytesRead = _networkStream.Read(buffer, 0, buffer.Length);
+                    var bytesRead = _networkStream.Read(buffer, 0, buffer.Length);
                     if (bytesRead > 0)
                     {
-                        string response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                        Console.WriteLine($"Received from Komorebi socket: {response}");
+                        var response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                        Console.WriteLine(response);
+                        var asMessage = NotificationMessage.FromJson(response);
+                        if (
+                            asMessage.Event.WindowManagerEvent.Type
+                            == NotificationTypeEnum.FocusChange
+                        )
+                        {
+                            var monitor = asMessage.State.Monitors.Focused;
+                            var workspace = asMessage
+                                .State
+                                .Monitors
+                                .Elements[monitor]
+                                .Workspaces
+                                .Focused;
+
+                            Console.WriteLine($"{monitor}: {workspace}");
+                        }
                     }
                 }
                 Thread.Sleep(100); // avoid busy loop
@@ -63,7 +84,7 @@ public class CommunicationManager
     {
         _namedPipeServer.WaitForConnection();
         Console.WriteLine("Komorebi connected to named pipe.");
-        
+
         using var streamReader = new StreamReader(_namedPipeServer, Encoding.UTF8);
         while (true)
         {
@@ -88,10 +109,9 @@ public class CommunicationManager
         // Create message to subscribe to named pipe.
         var message = new SocketMessage
         {
-            Content = new Content { String = _komorebiNamedPipeName },
-            Type = TypeEnum.AddSubscriberPipe,
+            Content = new SocketContent { String = _komorebiNamedPipeName },
+            Type = SocketTypeEnum.AddSubscriberPipe,
         };
-        Console.WriteLine(message.ToJson());
         var data = Encoding.UTF8.GetBytes(message.ToJson());
 
         _networkStream.Write(data, 0, data.Length);
